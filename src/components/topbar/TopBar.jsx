@@ -5,8 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { icon, solid} from '@fortawesome/fontawesome-svg-core/import.macro'
 import { faFacebookSquare, faInstagramSquare, faPinterestSquare, faTwitterSquare } from '@fortawesome/free-brands-svg-icons'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { Link } from 'react-router-dom'
 
 const TopBar = () => {
+    const user = false;
   return (
     <div className="top">
         <div className="topLeft">
@@ -18,7 +20,7 @@ const TopBar = () => {
         <div className="topCenter">
             <ul className="topList">
                 <li className="topListItem">
-                    HOME
+                    <Link to="/" className="link">HOME</Link>
                 </li>
                 <li className="topListItem">
                     ABOUT
@@ -27,21 +29,34 @@ const TopBar = () => {
                     CONTACT
                 </li>
                 <li className="topListItem">
-                    WRITE
+                    <Link to="/write" className="link">WRITE</Link>
                 </li>
                 <li className="topListItem">
-                    LOGOUT
+                    {user && "LOGOUT"}
                 </li>
             </ul>
         </div>
         <div className="topRight">
-            <div className="topImageDiv">
+            {
+                user ? (
+                    <div className="topImageDiv">
                 <img 
                     src={beeLogo}
                     alt="logo"
                     className="topImage"
                 />
             </div>
+                ) : (
+                    <ul className="topList">
+                        <li className="topListItem">
+                            <Link className="link" to="/login">LOGIN</Link>
+                        </li>
+                        <li className="topListItem">
+                            <Link className="link" to="/register">REGISTER</Link>
+                        </li>
+                    </ul>
+                )
+            }
             
             <FontAwesomeIcon icon={faMagnifyingGlass} className="topSearchIcon" />
         </div>
