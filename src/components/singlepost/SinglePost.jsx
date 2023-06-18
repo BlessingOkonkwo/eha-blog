@@ -1,24 +1,43 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './singlePost.css'
 
-import postImg from '../../assets/images/post-img.jpg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-regular-svg-icons'
+import { Link, useLocation } from 'react-router-dom'
+import axios from 'axios'
 
 const SinglePost = () => {
+  const location = useLocation();
+  const path = (location.pathname.split("/[2]")[0].split('/')[2]);
+  const [post, setPost] = useState({});
+
+  useEffect(() => {
+    const getPost = async () => {
+      const res = await axios.get("http://localhost:4000/api/posts/" + path);
+      setPost(res.data);
+      console.log(res);
+    }
+    getPost();
+  }, [path]);
+
+  console.log('path', path);
+
   return (
     <div className="singlePost">
       <div className="singlePostWrapper">
         <div>
+          {post.photo && (
             <img 
-                src={postImg}
-                alt="" 
-                width="100%"
-                className="singlePostImg"
+            src={post.photo}
+            alt="" 
+            width="100%"
+            className="singlePostImg"
             />
+          )}
+            
         </div>
         <h1 className="singlePostTitle">
-            Lorem Ipsum Dolor Sit Amet.
+            {post.title}
             <div className="singlePostEdit">
                 <FontAwesomeIcon icon={faPenToSquare} className="singlePostIcon" />
                 <FontAwesomeIcon icon={faTrashCan} className="singlePostIcon" />
@@ -26,17 +45,13 @@ const SinglePost = () => {
         </h1>
 
         <div className="singlePostInfo">
-            <span className="singlePostAuthor">Author: <b>Blessing</b></span>
-            <span className="singlePostDate">1 hour ago</span>
+            <span className="singlePostAuthor">
+              Author: <Link to={`/?user=${post.username}`} className="link"><b>{post.username}</b></Link>
+            </span>
+            <span className="singlePostDate">{new Date(post.createdAt).toDateString()}</span>
         </div>
         <p className="singlePostDesc">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi aliquid 
-            cupiditate aperiam in quo neque explicabo quae fugit error. Nemo, dolores 
-            amet commodi culpa voluptatum vero nostrum. Deserunt, accusamus est! Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi aliquid 
-            cupiditate aperiam in quo neque explicabo quae fugit error. Nemo, dolores 
-            amet commodi culpa voluptatum vero nostrum. Deserunt, accusamus est! Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi aliquid 
-            cupiditate aperiam in quo neque explicabo quae fugit error. Nemo, dolores 
-            amet commodi culpa voluptatum vero nostrum. Deserunt, accusamus est!
+            {post.desc}
         </p>
       </div>
     </div>
